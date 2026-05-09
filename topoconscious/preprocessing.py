@@ -3,7 +3,8 @@ fMRI preprocessing: NIfTI loading, atlas parcellation, signal extraction.
 """
 import numpy as np
 import nibabel as nib
-from nilearn import datasets, input_data, signal
+from nilearn import datasets, signal
+from nilearn.maskers import NiftiLabelsMasker
 
 
 class Preprocessor:
@@ -42,7 +43,7 @@ class Preprocessor:
         """
         Returns cleaned time series: shape (n_volumes, n_regions).
         """
-        masker = input_data.NiftiLabelsMasker(
+        masker = NiftiLabelsMasker(
             labels_img=self._atlas_img,
             standardize=True,
             detrend=True,

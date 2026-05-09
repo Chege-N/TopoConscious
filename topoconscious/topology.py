@@ -73,7 +73,7 @@ class PersistenceEngine:
             result = ripser.ripser(
                 dist_mat,
                 maxdim=self.max_dim,
-                metric="precomputed",
+                metric="precomputed",  # square distance matrix
                 thresh=self.max_edge,
             )
             diagrams = {d: result["dgms"][d] for d in range(self.max_dim + 1)}
