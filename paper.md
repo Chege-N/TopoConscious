@@ -10,7 +10,7 @@ tags:
   - hidden Markov model
   - transfer entropy
 authors:
-  - name: Chege N.
+  - name: Chege, N.
     orcid: 0009-0005-9792-5361
     affiliation: 1
 affiliations:
