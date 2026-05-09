@@ -2,9 +2,9 @@ cff-version: 1.2.0
 message: "If you use TopoConscious in your research, please cite it as below."
 title: "TopoConscious: Persistent Homology Pipeline for Neural Correlates of Consciousness"
 version: "0.1.0"
-date-released: "2025-01-01"
+date-released: "2026-05-09"
 license: "Apache-2.0"
-repository-code: "https://github.com/YOUR_USERNAME/topoconscious"
+repository-code: "https://github.com/Chege-N/TopoConscious"
 abstract: >
   TopoConscious is a Python package that detects neural correlates of consciousness
   from fMRI/MEG data using persistent homology (H0, H1, H2) of sliding-window point
@@ -13,8 +13,8 @@ abstract: >
   GUDHI SimplexTree.  Validated on propofol, sleep staging, and disorders of
   consciousness datasets (AUC > 0.90 vs static FC baseline ~0.75).
 authors:
-  - family-names: "Your Last Name"
-    given-names: "Your First Name"
+  - family-names: "Ng'ang'a"
+    given-names: "Felix Chege"
     orcid: "https://orcid.org/0000-0000-0000-0000"
 keywords:
   - "persistent homology"
