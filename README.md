@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-green)](LICENSE)
 [![GUDHI](https://img.shields.io/badge/topology-GUDHI%203.8%2B-purple)](https://gudhi.inria.fr)
 [![Ripser](https://img.shields.io/badge/homology-Ripser%200.6%2B-orange)](https://ripser.scikit-tda.org)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20101572.svg)](https://doi.org/10.5281/zenodo.20101572)
 
 TopoConscious is a Python package that mathematically distinguishes **conscious** from **unconscious** brain states using topological data analysis of fMRI time series. It models each sliding time window of fMRI activity as a point cloud in high-dimensional space, computes persistent homology (H₀, H₁, H₂), and tracks topological changes over time to decode consciousness probability.
 
