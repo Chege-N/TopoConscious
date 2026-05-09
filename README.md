@@ -342,10 +342,10 @@ TopoConscious/
 If you use TopoConscious in your research, please cite:
 
 ```bibtex
-@software{topoconscious2025,
+@software{topoconscious2026,
   title   = {TopoConscious: Persistent Homology Pipeline for Neural Correlates of Consciousness},
   author  = {Chege, N.},
-  year    = {2025},
+  year    = {2026},
   version = {0.1.0},
   license = {Apache-2.0},
   url     = {https://github.com/Chege-N/TopoConscious}
@@ -370,8 +370,3 @@ flake8 topoconscious/ --max-line-length=100
 ## 📜 License
 
 Apache License 2.0 — see [LICENSE](LICENSE) for details.
-
-## Status
-
-[![Tests](https://github.com/Chege-N/TopoConscious/actions/workflows/test.yml/badge.svg)](https://github.com/Chege-N/TopoConscious/actions/workflows/test.yml)
-![Python](https://img.shields.io/badge/python-3.13-blue)
