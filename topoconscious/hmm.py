@@ -33,9 +33,19 @@ class TopologicalHMM:
         X = self.scaler.fit_transform(sig_vectors)
         lengths = [len(X)]
 
+        # Covariance type fallback: "full" requires at least n_features^2 samples
+        # per state; fall back to "diag" or "spherical" for small datasets
+        n_samples, n_features = X.shape
+        min_per_state = max(n_features + 1, 10)
+        cov_type = self.cov_type
+        if n_samples < self.n_states * min_per_state:
+            cov_type = "diag"
+        if n_samples < self.n_states * 5:
+            cov_type = "spherical"
+
         self.model = hmm.GaussianHMM(
             n_components=self.n_states,
-            covariance_type=self.cov_type,
+            covariance_type=cov_type,
             n_iter=self.n_iter,
             random_state=self.random_state,
         )
@@ -44,10 +54,11 @@ class TopologicalHMM:
         log_likelihood, state_seq = self.model.decode(X, algorithm="viterbi")
         posteriors = self.model.predict_proba(X)
 
-        # Heuristic: the conscious state has higher total H1 persistence on average
-        # (index 1 of signature = total_persistence_H1)
+        # Heuristic: conscious state = state with highest mean total H1 persistence
+        # Feature index 1 (0-indexed) = total_persistence_H1
         means = self.model.means_
-        self._conscious_state = int(np.argmax(means[:, 1]))
+        h1_col = min(1, means.shape[1] - 1)
+        self._conscious_state = int(np.argmax(means[:, h1_col]))
 
         p_conscious = posteriors[:, self._conscious_state]
 

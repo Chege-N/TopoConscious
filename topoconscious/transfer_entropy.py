@@ -4,12 +4,19 @@ Measures directional information flow between brain regions
 based on the birth-time sequences of H1 cycles.
 
 Uses the standard Transfer Entropy estimator:
-  TE(X→Y) = H(Y_t | Y_{t-1}) - H(Y_t | Y_{t-1}, X_{t-1})
+  TE(X->Y) = H(Y_t | Y_{t-1}) - H(Y_t | Y_{t-1}, X_{t-1})
 where X and Y are topological feature sequences per region.
 """
 import numpy as np
 from scipy.stats import entropy as scipy_entropy
 from typing import List, Dict
+
+# Attempt to import the fast C++ extension; fall back to pure Python.
+try:
+    from .ext._topo_te import transfer_entropy_matrix as _te_matrix_cpp
+    _CPP_AVAILABLE = True
+except ImportError:
+    _CPP_AVAILABLE = False
 
 
 class TopologicalTransferEntropy:
@@ -22,22 +29,22 @@ class TopologicalTransferEntropy:
                 ts_matrix: np.ndarray) -> np.ndarray:
         """
         For each pair of regions (i, j), extract the H1 total persistence
-        time series and compute TE(i → j).
+        time series and compute TE(i -> j).
 
         ts_matrix: (n_volumes, n_regions) – used to assign diagrams to regions
         Returns: (n_regions, n_regions) TE matrix.
         """
         n_regions = ts_matrix.shape[1]
-        n_windows = len(diagrams_list)
 
         # Build per-region H1 persistence time series
-        # Each window covers window_size time points of all regions together;
-        # we proxy region-level topology by projecting the full diagram
-        # onto per-region birth contributions via region correlation with
-        # the landmark selection.
         region_ts = self._extract_region_persistence(
             diagrams_list, ts_matrix, n_regions
         )  # (n_windows, n_regions)
+
+        # Use C++ extension if available (much faster for large n_regions)
+        if _CPP_AVAILABLE:
+            return _te_matrix_cpp(region_ts.astype(np.float64),
+                                   self.lag, self.n_bins)
 
         te_matrix = np.zeros((n_regions, n_regions))
         for i in range(n_regions):
@@ -72,7 +79,7 @@ class TopologicalTransferEntropy:
 
     def _transfer_entropy(self, x: np.ndarray, y: np.ndarray) -> float:
         """
-        Estimate TE(x → y) using histogram binning.
+        Estimate TE(x -> y) using histogram binning.
         TE = H(y_t | y_{t-1}) - H(y_t | y_{t-1}, x_{t-1})
         """
         lag = self.lag

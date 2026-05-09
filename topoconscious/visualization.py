@@ -1,6 +1,6 @@
 """
 Visualization module:
-  - Consciousness probability time course plot
+  - Consciousness probability time course plot (with Müller-Lyer overlay)
   - Transfer entropy heatmap
   - Interactive Jupyter widget for PD exploration
 """
@@ -10,7 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import os
-from typing import Dict
+from typing import Dict, Optional
 
 
 class TopoVisualizer:
@@ -22,9 +22,19 @@ class TopoVisualizer:
     # ------------------------------------------------------------------
     def plot_consciousness_timeline(self, hmm_result: Dict,
                                      wass_timeline: np.ndarray,
-                                     subject_id: str):
-        fig = plt.figure(figsize=(14, 6))
-        gs = gridspec.GridSpec(2, 1, hspace=0.4)
+                                     subject_id: str,
+                                     ml_timeline: Optional[np.ndarray] = None,
+                                     pl_timeline: Optional[np.ndarray] = None):
+        """
+        Up to 4-panel figure:
+          1. P(conscious) from HMM
+          2. Wasserstein W2 distance (H1)
+          3. Müller-Lyer current distance (H1) – if provided
+          4. Persistence landscape L2 distance (H1) – if provided
+        """
+        n_panels = 2 + (1 if ml_timeline is not None else 0) + (1 if pl_timeline is not None else 0)
+        fig = plt.figure(figsize=(14, 3 * n_panels))
+        gs = gridspec.GridSpec(n_panels, 1, hspace=0.45)
 
         ax1 = fig.add_subplot(gs[0])
         t = np.arange(len(hmm_result["p_conscious"]))
@@ -39,16 +49,34 @@ class TopoVisualizer:
         ax2 = fig.add_subplot(gs[1])
         ax2.plot(np.arange(len(wass_timeline)), wass_timeline,
                  color="#FF5722", linewidth=1.2, label="Wasserstein dist (H1)")
-        ax2.set_xlabel("Window index", fontsize=11)
+        ax2.set_xlabel("Window index" if ml_timeline is None else "", fontsize=11)
         ax2.set_ylabel("W₂ distance", fontsize=11)
         ax2.legend(loc="upper right")
+
+        if ml_timeline is not None:
+            ax3 = fig.add_subplot(gs[2])
+            ax3.plot(np.arange(len(ml_timeline)), ml_timeline,
+                     color="#9C27B0", linewidth=1.2,
+                     label="Müller-Lyer current (H1)")
+            ax3.set_xlabel("Window index" if pl_timeline is None else "", fontsize=11)
+            ax3.set_ylabel("ML distance", fontsize=11)
+            ax3.legend(loc="upper right")
+
+        if pl_timeline is not None:
+            ax4 = fig.add_subplot(gs[3 if ml_timeline is not None else 2])
+            ax4.plot(np.arange(len(pl_timeline)), pl_timeline,
+                     color="#00BCD4", linewidth=1.2,
+                     label="Landscape L2 dist (H1)")
+            ax4.set_xlabel("Window index", fontsize=11)
+            ax4.set_ylabel("PL distance", fontsize=11)
+            ax4.legend(loc="upper right")
 
         out_path = os.path.join(self.output_dir, subject_id,
                                 "consciousness_timeline.png")
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         plt.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
-        print(f"  [viz] Saved timeline → {out_path}")
+        print(f"  [viz] Saved timeline -> {out_path}")
 
     # ------------------------------------------------------------------
     def plot_te_matrix(self, te_matrix: np.ndarray, subject_id: str):
@@ -63,7 +91,7 @@ class TopoVisualizer:
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         plt.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
-        print(f"  [viz] Saved TE matrix → {out_path}")
+        print(f"  [viz] Saved TE matrix -> {out_path}")
 
     # ------------------------------------------------------------------
     def persistence_widget(self, diagrams_list: list, tr: float = 2.0):

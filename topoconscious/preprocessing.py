@@ -9,7 +9,7 @@ from nilearn import datasets, input_data, signal
 class Preprocessor:
     """
     Loads a BOLD NIfTI file, parcellates with the chosen atlas,
-    and returns a (n_volumes × n_regions) time-series matrix.
+    and returns a (n_volumes x n_regions) time-series matrix.
     """
 
     ATLAS_MAP = {

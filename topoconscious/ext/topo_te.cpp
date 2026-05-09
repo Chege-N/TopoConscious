@@ -1,5 +1,5 @@
 /*
- * topo_te.cpp  –  C++17 / OpenMP extension for fast Transfer Entropy
+ * topo_te.cpp  -  C++17 / OpenMP extension for fast Transfer Entropy
  * between topological feature time series.
  *
  * Build:
@@ -29,7 +29,6 @@ static double cond_entropy(
     const std::vector<int>& cond,
     int n_cond, int n_y_bins)
 {
-    /* H(Y | cond) */
     using Map = std::unordered_map<int, std::unordered_map<int,int>>;
     Map joint;
     std::unordered_map<int,int> cond_counts;
@@ -64,7 +63,6 @@ py::array_t<double> transfer_entropy_matrix(
     int n_r = buf.shape[1];
     double* data = static_cast<double*>(buf.ptr);
 
-    /* pre-compute min/max per region */
     std::vector<double> rmin(n_r, 1e300), rmax(n_r, -1e300);
     for (int w = 0; w < n_w; ++w)
         for (int r = 0; r < n_r; ++r) {
@@ -73,7 +71,6 @@ py::array_t<double> transfer_entropy_matrix(
             rmax[r] = std::max(rmax[r], v);
         }
 
-    /* discretise each region series */
     std::vector<std::vector<int>> disc(n_r, std::vector<int>(n_w));
     for (int r = 0; r < n_r; ++r)
         for (int w = 0; w < n_w; ++w)
@@ -103,7 +100,6 @@ py::array_t<double> transfer_entropy_matrix(
         }
     }
 
-    /* return as numpy array */
     auto result = py::array_t<double>({n_r, n_r});
     auto rbuf = result.request();
     double* rptr = static_cast<double*>(rbuf.ptr);
@@ -114,6 +110,6 @@ py::array_t<double> transfer_entropy_matrix(
 PYBIND11_MODULE(_topo_te, m) {
     m.doc() = "Fast C++/OpenMP Transfer Entropy for TopoConscious";
     m.def("transfer_entropy_matrix", &transfer_entropy_matrix,
-          "Compute n_regions × n_regions TE matrix from region time series",
+          "Compute n_regions x n_regions TE matrix from region time series",
           py::arg("region_ts"), py::arg("lag")=1, py::arg("n_bins")=10);
 }

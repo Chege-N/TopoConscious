@@ -1,12 +1,10 @@
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 import sys
-import pybind11
 
 topo_te_ext = Extension(
     "topoconscious.ext._topo_te",
     sources=["topoconscious/ext/topo_te.cpp"],
-    include_dirs=[pybind11.get_include()],
     extra_compile_args=["-O3", "-std=c++17", "-fopenmp"],
     extra_link_args=["-fopenmp"],
 )
