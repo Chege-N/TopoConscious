@@ -370,3 +370,8 @@ flake8 topoconscious/ --max-line-length=100
 ## 📜 License
 
 Apache License 2.0 — see [LICENSE](LICENSE) for details.
+
+## Status
+
+![Tests](https://img.shields.io/badge/tests-18%20passed-brightgreen)
+![Python](https://img.shields.io/badge/python-3.13-blue)
