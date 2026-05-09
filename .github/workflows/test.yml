@@ -39,7 +39,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov pybind11
+          pip install pytest pytest-cov pybind11 POT
           pip install -r requirements.txt
 
       - name: Install package (skip C++ extension)
