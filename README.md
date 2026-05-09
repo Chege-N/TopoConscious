@@ -373,5 +373,5 @@ Apache License 2.0 — see [LICENSE](LICENSE) for details.
 
 ## Status
 
-![Tests](https://img.shields.io/badge/tests-18%20passed-brightgreen)
+[![Tests](https://github.com/Chege-N/TopoConscious/actions/workflows/test.yml/badge.svg)](https://github.com/Chege-N/TopoConscious/actions/workflows/test.yml)
 ![Python](https://img.shields.io/badge/python-3.13-blue)
