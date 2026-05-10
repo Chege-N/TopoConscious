@@ -22,3 +22,12 @@ data/**
 .DS_Store
 *.swp
 backend/__pycache__/
+wheelhouse/
+*.egg-info/
+results_real/
+validation_data_propofol/
+data/
+*.npy
+*.csv
+*.png
+*.so
