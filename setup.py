@@ -1,19 +1,19 @@
-from setuptools import setup, find_packages, Extension
-from setuptools.command.build_ext import build_ext
-import sys
+from setuptools import setup, find_packages
+from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-topo_te_ext = Extension(
+topo_te_ext = Pybind11Extension(
     "topoconscious.ext._topo_te",
-    sources=["topoconscious/ext/topo_te.cpp"],
-    extra_compile_args=["-O3", "-std=c++17", "-fopenmp"],
+    ["topoconscious/ext/topo_te.cpp"],
+    cxx_std=17,
+    extra_compile_args=["-O3", "-fopenmp"],
     extra_link_args=["-fopenmp"],
 )
 
 setup(
     name="topoconscious",
     version="0.1.0",
-    author="TopoConscious Team",
-    description="Topological pipeline for consciousness detection from fMRI",
+    author="Felix Chege Ng'ang'a",
+    description="Persistent homology pipeline for neural correlates of consciousness",
     packages=find_packages(),
     ext_modules=[topo_te_ext],
     cmdclass={"build_ext": build_ext},

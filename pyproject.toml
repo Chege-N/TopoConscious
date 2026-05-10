@@ -1,0 +1,63 @@
+[build-system]
+requires = [
+    "setuptools>=68",
+    "wheel",
+    "pybind11>=2.10"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "topoconscious"
+version = "0.1.0"
+description = "Persistent homology pipeline for neural correlates of consciousness"
+readme = "README.md"
+requires-python = ">=3.9"
+
+license = { text = "Apache-2.0" }
+
+authors = [
+  { name = "Felix Chege Ng'ang'a" }
+]
+
+keywords = [
+  "persistent-homology",
+  "topological-data-analysis",
+  "neuroscience",
+  "fmri",
+  "consciousness",
+  "tda"
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
+dependencies = [
+  "numpy",
+  "scipy",
+  "matplotlib",
+  "scikit-learn",
+  "ripser",
+  "gudhi",
+  "hmmlearn",
+  "nilearn",
+  "networkx",
+  "pot",
+  "fastapi",
+  "uvicorn"
+]
+
+[project.urls]
+Homepage = "https://github.com/Chege-N/TopoConscious"
+Repository = "https://github.com/Chege-N/TopoConscious"
+Documentation = "https://github.com/Chege-N/TopoConscious"
+Issues = "https://github.com/Chege-N/TopoConscious/issues"
+
+[project.scripts]
+topoconscious = "topoconscious.run_pipeline:main"
