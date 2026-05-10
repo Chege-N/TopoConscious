@@ -6,9 +6,9 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools_scm]
-version_scheme = "guess-next-dev"
-local_scheme = "no-local-version"
+[project]
+name = "topoconscious"
+version = "0.1.4"
 description = "Persistent homology pipeline for neural correlates of consciousness"
 readme = "README.md"
 requires-python = ">=3.9"

@@ -21,7 +21,7 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install pybind11 setuptools wheel build twine setuptools-scm
+          pip install pybind11 setuptools wheel build twine
 
       - name: Build package
         run: python -m build
