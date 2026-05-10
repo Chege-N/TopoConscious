@@ -8,11 +8,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "topoconscious"
-version = "0.1.4"
-description = "Persistent homology pipeline for neural correlates of consciousness"
+version = "0.1.6"
+description = "Persistent homology pipeline for detecting neural correlates of consciousness from fMRI"
 readme = "README.md"
 requires-python = ">=3.9"
-
 license = { text = "Apache-2.0" }
 
 authors = [
@@ -25,7 +24,9 @@ keywords = [
   "neuroscience",
   "fmri",
   "consciousness",
-  "tda"
+  "tda",
+  "hidden-markov-model",
+  "transfer-entropy"
 ]
 
 classifiers = [
@@ -34,30 +35,51 @@ classifiers = [
   "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence"
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Medical Science Apps."
 ]
 
 dependencies = [
-  "numpy",
-  "scipy",
-  "matplotlib",
-  "scikit-learn",
-  "ripser",
-  "gudhi",
-  "hmmlearn",
-  "nilearn",
-  "networkx",
-  "pot",
-  "fastapi",
-  "uvicorn"
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "matplotlib>=3.7",
+  "pandas>=2.0",
+  "scikit-learn>=1.3",
+  "ripser>=0.6",
+  "gudhi>=3.8",
+  "POT>=0.9.0",
+  "hmmlearn>=0.3",
+  "nilearn>=0.10",
+  "nibabel>=5.0",
+  "pybids>=0.16",
+  "persim>=0.3",
+  "fastapi>=0.100.0",
+  "uvicorn>=0.23.0",
+  "networkx>=3.0"
 ]
+
+[project.optional-dependencies]
+gpu = ["cupy-cuda12x>=12.0"]
+dev = ["pytest>=7.0", "pytest-cov", "flake8", "twine", "build"]
 
 [project.urls]
 Homepage = "https://github.com/Chege-N/TopoConscious"
 Repository = "https://github.com/Chege-N/TopoConscious"
 Documentation = "https://github.com/Chege-N/TopoConscious"
 Issues = "https://github.com/Chege-N/TopoConscious/issues"
+Paper = "https://joss.theoj.org"
 
 [project.scripts]
 topoconscious = "topoconscious.run_pipeline:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["topoconscious*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::UserWarning"]

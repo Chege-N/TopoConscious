@@ -5,10 +5,13 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -20,20 +23,21 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install build twine pybind11
+          pip install build pybind11 setuptools wheel
 
-      - name: Build package
-        run: python -m build
+      - name: Build source distribution and wheel
+        run: python -m build --sdist --wheel
 
       - name: Check distribution
-        run: twine check dist/*
+        run: |
+          pip install twine
+          twine check dist/*
 
-      - name: Upload to PyPI
+      - name: Upload to PyPI (Trusted Publishing)
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          files: dist/*
