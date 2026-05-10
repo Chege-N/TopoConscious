@@ -10,8 +10,13 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # Add windows-latest, macos-latest if you want cross-platform
     steps:
       - uses: actions/checkout@v4
 
@@ -20,24 +25,32 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install build tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install build pybind11 setuptools wheel
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel
 
-      - name: Build source distribution and wheel
-        run: python -m build --sdist --wheel
+      - name: Build manylinux wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_SKIP: "pp* *-musllinux_*"   # skip PyPy and musllinux for now
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          CIBW_BEFORE_ALL: "pip install pybind11"
+          CIBW_ENVIRONMENT: "CMAKE_ARGS=-DPYBIND11_FINDPYTHON=ON"
 
-      - name: Check distribution
-        run: |
-          pip install twine
-          twine check dist/*
+      - name: Build sdist (source distribution)
+        run: python -m build --sdist
+        # sdist is platform-independent
 
-      - name: Upload to PyPI (Trusted Publishing)
+      - name: Upload wheels and sdist to PyPI (Trusted Publishing)
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: wheelhouse
+          # Also upload the sdist from dist/ folder
+          packages-dir-extra: dist
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: dist/*
+          files: |
+            wheelhouse/*.whl
+            dist/*.tar.gz
