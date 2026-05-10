@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
+from pybind11 import get_include
 
 topo_te_ext = Pybind11Extension(
     "topoconscious.ext._topo_te",
@@ -11,7 +12,7 @@ topo_te_ext = Pybind11Extension(
 
 setup(
     name="topoconscious",
-    version="0.1.0",
+    use_scm_version=True,
     author="Felix Chege Ng'ang'a",
     description="Persistent homology pipeline for neural correlates of consciousness",
     packages=find_packages(),
